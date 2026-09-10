@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>中一/中二數學大挑戰：HCF & LCM 5分鐘極速賽</title>
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-dark: #3a0ca3;
+      --secondary: #4cc9f0;
+      --accent: #f72585;
+      --success: #2ec4b6;
+      --warning: #ffb703;
+      --danger: #e63946;
+      --card-bg: #1e293b;
+      --text: #f8fafc;
+      --text-dim: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0b0f19 0%, #1e1b4b 100%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 680px;
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      font-size: 0.95rem;
+      color: var(--text-dim);
+    }
+
+    .badge {
+      background: rgba(67, 97, 238, 0.25);
+      color: var(--secondary);
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-weight: 700;
+      border: 1px solid rgba(76, 201, 240, 0.3);
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      text-align: center;
+      margin-bottom: 8px;
+      background: linear-gradient(to right, #4cc9f0, #f72585);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+    }
+
+    .screen {
+      display: none;
+    }
+    .screen.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      color: var(--text-dim);
+    }
+    input[type="text"], input[type="number"], select {
+      width: 100%;
+      padding: 13px 16px;
+      border-radius: 12px;
+      border: 2px solid #334155;
+      background: #0f172a;
+      color: #fff;
+      font-size: 1.05rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus {
+      border-color: var(--secondary);
+      box-shadow: 0 0 12px rgba(76, 201, 240, 0.25);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 13px 20px;
+      border-radius: 12px;
+      border: none;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      box-shadow: 0 6px 16px rgba(67, 97, 238, 0.3);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(67, 97, 238, 0.45);
+    }
+    .btn-secondary {
+      background: #334155;
+      box-shadow: none;
+      margin-top: 10px;
+    }
+    .btn-secondary:hover {
+      background: #475569;
+      box-shadow: none;
+    }
+    .btn-tutorial {
+      background: rgba(76, 201, 240, 0.15);
+      color: var(--secondary);
+      border: 1px solid rgba(76, 201, 240, 0.35);
+      box-shadow: none;
+      margin-bottom: 12px;
+    }
+    .btn-tutorial:hover {
+      background: rgba(76, 201, 240, 0.25);
+      transform: translateY(-2px);
+    }
+
+    /* Timer Bar */
+    .timer-container {
+      width: 100%;
+      height: 12px;
+      background: #334155;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .timer-bar {
+      height: 100%;
+      width: 100%;
+      background: var(--success);
+      transition: width 1s linear, background-color 0.3s ease;
+    }
+
+    .question-card {
+      background: #0f172a;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      border: 1px solid #334155;
+      margin-bottom: 18px;
+    }
+    .type-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    .type-hcf {
+      background: rgba(247, 37, 133, 0.2);
+      color: var(--accent);
+      border: 1px solid rgba(247, 37, 133, 0.4);
+    }
+    .type-lcm {
+      background: rgba(76, 201, 240, 0.2);
+      color: var(--secondary);
+      border: 1px solid rgba(76, 201, 240, 0.4);
+    }
+
+    .numbers-display {
+      font-size: 2.1rem;
+      font-weight: 900;
+      letter-spacing: 2px;
+      color: #fff;
+      margin: 12px 0;
+      word-break: break-word;
+    }
+    .point-reward {
+      color: var(--warning);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .feedback {
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin-bottom: 16px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-align: center;
+      display: none;
+    }
+    .feedback.warning {
+      display: block;
+      background: rgba(255, 183, 3, 0.15);
+      color: var(--warning);
+      border: 1px solid var(--warning);
+    }
+    .feedback.success {
+      display: block;
+      background: rgba(46, 196, 182, 0.15);
+      color: var(--success);
+      border: 1px solid var(--success);
+    }
+    .feedback.danger {
+      display: block;
+      background: rgba(230, 57, 70, 0.15);
+      color: var(--danger);
+      border: 1px solid var(--danger);
+    }
+
+    /* Result Stats Card */
+    .highlight-card {
+      background: linear-gradient(135deg, rgba(67, 97, 238, 0.25) 0%, rgba(76, 201, 240, 0.15) 100%);
+      border: 2px solid var(--secondary);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .highlight-row {
+      background: rgba(76, 201, 240, 0.25) !important;
+      font-weight: bold;
+      animation: pulseHighlight 2s infinite alternate;
+    }
+    @keyframes pulseHighlight {
+      0% { background-color: rgba(76, 201, 240, 0.2); }
+      100% { background-color: rgba(76, 201, 240, 0.45); }
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .stat-box {
+      background: #0f172a;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #334155;
+      text-align: center;
+    }
+    .stat-val {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #fff;
+    }
+    .stat-lbl {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+    }
+
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.9rem;
+    }
+    .leaderboard-table th, .leaderboard-table td {
+      padding: 10px 8px;
+      text-align: left;
+      border-bottom: 1px solid #334155;
+    }
+    .leaderboard-table th {
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+    .rank-1 { color: #ffd700; font-weight: bold; }
+    .rank-2 { color: #c0c0c0; font-weight: bold; }
+    .rank-3 { color: #cd7f32; font-weight: bold; }
+
+    .teacher-box {
+      background: #0f172a;
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 16px;
+      border: 1px dashed #475569;
+    }
+    .teacher-box h4 {
+      font-size: 0.95rem;
+      color: var(--secondary);
+      margin-bottom: 6px;
+    }
+    textarea {
+      width: 100%;
+      height: 60px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #fff;
+      border-radius: 8px;
+      padding: 8px;
+      font-size: 0.85rem;
+      resize: vertical;
+      margin-bottom: 6px;
+    }
+    .btn-sm {
+      padding: 7px 12px;
+      font-size: 0.85rem;
+      width: auto;
+      display: inline-block;
+      margin-right: 6px;
+      margin-top: 4px;
+    }
+
+    /* Tutorial Visual Cards */
+    .tut-card {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+    .tut-card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .code-demo {
+      background: #1e293b;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.92rem;
+      color: #a5f3fc;
+      margin: 8px 0;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- 1. START SCREEN -->
+    <div id="startScreen" class="screen active">
+      <h1>HCF & LCM 5分鐘挑戰賽</h1>
+      <p class="subtitle">中一 至 中二 • 短除法與因數分解修煉</p>
+
+      <button class="btn btn-tutorial" onclick="showScreen('tutorialScreen')">
+        📖 遊戲前教學：如何快速計算 LCM & HCF？
+      </button>
+
+      <div class="form-group">
+        <label for="studentName">學生身分 / 班別學號 / 姓名（無格式要求，如 1b99, 1B 99, 991b, 1A陳大文）</label>
+        <input type="text" id="studentName" placeholder="請在此輸入任意代號或姓名..." autofocus autocomplete="off">
+      </div>
+
+      <div class="form-group">
+        <label>挑戰模式</label>
+        <select id="gameMode">
+          <option value="mixed">綜合挑戰（HCF + LCM 隨機出現）</option>
+          <option value="hcf">專項衝刺：HCF 最大公因數</option>
+          <option value="lcm">專項衝刺：LCM 最小公倍數</option>
+        </select>
+      </div>
+
+      <div style="background: rgba(67, 97, 238, 0.1); border: 1px solid rgba(76, 201, 240, 0.2); border-radius: 10px; padding: 12px; margin-bottom: 16px; font-size: 0.85rem; color: var(--text-dim); line-height: 1.5;">
+        📌 <b>規則重點：</b><br>
+        • 全局限時 <b>5 分鐘 (300秒)</b>，答對越多、數字越多分值越高！<br>
+        • 首次答對獲 <b>100% 滿分</b>；答錯有 1 次改正機會，改正答對獲 <b>50% 分數</b>。<br>
+        • 時間結束後，系統會<b>自動將你的成績登錄並直接顯示在榮譽排行榜</b>！
+      </div>
+
+      <button class="btn" onclick="startGame()">⏱️ 開始 5 分鐘挑戰</button>
+      <button class="btn btn-secondary" onclick="showLeaderboard()">🏆 查看分數排行榜</button>
+    </div>
+
+    <!-- 2. TUTORIAL SCREEN -->
+    <div id="tutorialScreen" class="screen">
+      <h1>短除法速成教學</h1>
+      <p class="subtitle">中一、中二必備解題祕笈</p>
+
+      <div class="tut-card">
+        <h3 style="color: var(--accent);">🔍 1. 最大公因數 (HCF / GCD)</h3>
+        <p style="font-size: 0.88rem; color: var(--text-dim);">
+          • <b>核心口訣</b>：「必須<strong>全部數字</strong>都能整除，才可提取質因數！」<br>
+          • <b>計算方法</b>：只能相乘<strong>左側垂直列</strong>的所有除數。
+        </p>
+        <div class="code-demo">例：求 24 與 36 的 HCF
+  2 | 24   36  (兩數皆能被 2 整除)
+  2 | 12   18  (兩數皆能被 2 整除)
+  3 |  6    9  (兩數皆能被 3 整除)
+    ---------
+       2    3  (互質，停止！)
+
+=> HCF = 2 × 2 × 3 = 12</div>
+      </div>
+
+      <div class="tut-card">
+        <h3 style="color: var(--secondary);">🚀 2. 最小公倍數 (LCM)</h3>
+        <p style="font-size: 0.88rem; color: var(--text-dim);">
+          • <b>核心口訣</b>：「先整除全部；若不行，<strong>只要任兩個數能整除</strong>就繼續除，其餘照抄！」<br>
+          • <b>計算方法</b>：呈 <strong>L 型</strong>相乘（左側除數 × 最底層所有商）。
+        </p>
+        <div class="code-demo">例：求 12, 18, 20 的 LCM
+  2 | 12   18   20  (三數皆能被 2 除)
+  3 |  6    9   10  (6與9能被 3 除，10抄寫下來)
+  2 |  2    3   10  (2與10能被 2 除，3抄寫下來)
+    --------------
+       1    3    5  (兩兩皆互質，停止！)
+
+=> LCM = (左側 2 × 3 × 2) × (底部 1 × 3 × 5) = 180</div>
+      </div>
+
+      <button class="btn" onclick="startGame()">🚀 複習完畢，立即開始挑戰！</button>
+      <button class="btn btn-secondary" onclick="showScreen('startScreen')">⬅️ 返回主選單</button>
+    </div>
+
+    <!-- 3. GAMEPLAY SCREEN -->
+    <div id="gameScreen" class="screen">
+      <div class="header-bar">
+        <div>題號：第 <span id="currentQuestionNo" style="color:#fff; font-weight:bold;">1</span> 題</div>
+        <div class="badge">總分：<span id="currentScore">0</span></div>
+      </div>
+
+      <div class="timer-container">
+        <div id="timerBar" class="timer-bar"></div>
+      </div>
+      <div style="display: flex; justify-content: space-between; font-size: 0.88rem; color: var(--text-dim); margin-top: -12px; margin-bottom: 14px;">
+        <span>剩餘挑戰時間</span>
+        <span id="timerText" style="font-weight:bold; font-size: 1.1rem; color:#fff;">05:00</span>
+      </div>
+
+      <div id="feedbackBanner" class="feedback"></div>
+
+      <div class="question-card">
+        <div id="typeBadge" class="type-badge type-hcf">最大公因數 (HCF)</div>
+        <p style="color: var(--text-dim); font-size: 0.95rem;">請在草稿紙計算下列數字的結果：</p>
+        <div id="numbersDisplay" class="numbers-display">24 , 36 , 60</div>
+        <div id="pointReward" class="point-reward">★ 滿分：200 分 (3 個數) ｜ 改正：100 分</div>
+      </div>
+
+      <form id="answerForm" onsubmit="handleAnswerSubmit(event)">
+        <div class="form-group">
+          <input type="number" id="answerInput" placeholder="請在此輸入整數答案..." autocomplete="off" required>
+        </div>
+        <button type="submit" id="submitBtn" class="btn">確認提交</button>
+      </form>
+    </div>
+
+    <!-- 4. LEADERBOARD SCREEN (AUTO OPEN AT FINISH) -->
+    <div id="leaderboardScreen" class="screen">
+      <h1>榮譽榜單 (Leaderboard)</h1>
+      <p class="subtitle">5 分鐘挑戰賽頂尖榜</p>
+
+      <!-- 剛完成時顯示的個人總結卡 -->
+      <div id="mySummaryCard" class="highlight-card" style="display:none;">
+        <div style="font-size: 0.85rem; color: var(--secondary); font-weight: bold; margin-bottom: 4px;">🎉 恭喜完成 5 分鐘挑戰！你的成績已登榜</div>
+        <div style="font-size: 2.2rem; font-weight: 900; color: var(--warning);" id="summaryScore">0 分</div>
+        <div style="font-size: 0.95rem; color: #fff; margin-bottom: 8px;">
+          獲得班級排名：<span id="summaryRank" style="color: #ffd700; font-weight: bold; font-size: 1.2rem;">#1</span>
+        </div>
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div id="summaryFirst" class="stat-val" style="color: var(--success);">0</div>
+            <div class="stat-lbl">首答完全答對</div>
+          </div>
+          <div class="stat-box">
+            <div id="summaryRetry" class="stat-val" style="color: var(--warning);">0</div>
+            <div class="stat-lbl">改正答對 (50% 分)</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="max-height: 250px; overflow-y: auto;">
+        <table class="leaderboard-table">
+          <thead>
+            <tr>
+              <th style="width: 15%;">名次</th>
+              <th style="width: 40%;">學生姓名/代號</th>
+              <th style="width: 20%;">得分</th>
+              <th style="width: 25%;">答對題數</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody"></tbody>
+        </table>
+      </div>
+
+      <div class="teacher-box">
+        <h4>👩‍🏫 老師彙總與數據專區</h4>
+        <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 8px;">
+          學生可複製代碼發給老師，老師在下方貼上即可一鍵合併全班跨電腦成績！
+        </p>
+        <button class="btn btn-sm" onclick="copyMyResultCode()">📋 複製我的成績代碼</button>
+        <button class="btn btn-sm btn-secondary" onclick="exportCSV()">📥 下載成績 CSV</button>
+        <button class="btn btn-sm btn-secondary" onclick="clearLeaderboard()" style="color: var(--danger);">🗑️ 清空榜單</button>
+        
+        <div style="margin-top: 10px;">
+          <textarea id="importInput" placeholder="貼上學生的成績代碼進行合併 (每行一條)..."></textarea>
+          <button class="btn btn-sm" onclick="importResults()">➕ 匯入數據</button>
+        </div>
+      </div>
+
+      <button class="btn" onclick="startGame()" style="margin-top: 16px;">🔄 再挑戰一次</button>
+      <button class="btn btn-secondary" onclick="goToStart()">⬅️ 返回主選單</button>
+    </div>
+  </div>
+
+  <script>
+    /* =========================================================
+       1. 音效系統 (Web Audio API - 無需外部檔案)
+       ========================================================= */
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playTone(freq, type = 'sine', duration = 0.15) {
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+      gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + duration);
+    }
+    const Sound = {
+      correct: () => { playTone(523.25, 'triangle', 0.1); setTimeout(() => playTone(659.25, 'triangle', 0.18), 90); },
+      halfCorrect: () => { playTone(440, 'triangle', 0.12); setTimeout(() => playTone(554.37, 'triangle', 0.18), 100); },
+      wrong: () => { playTone(220, 'sawtooth', 0.15); setTimeout(() => playTone(174, 'sawtooth', 0.22), 110); },
+      victory: () => { [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => setTimeout(() => playTone(f, 'triangle', 0.16), i * 110)); }
+    };
+
+    /* =========================================================
+       2. 數學邏輯運算 (HCF & LCM)
+       ========================================================= */
+    function getGCD(a, b) {
+      while (b) { let t = b; b = a % b; a = t; }
+      return a;
+    }
+    function getHCFMulti(arr) {
+      return arr.reduce((acc, val) => getGCD(acc, val));
+    }
+    function getLCM(a, b) {
+      if (a === 0 || b === 0) return 0;
+      return Math.abs(a * b) / getGCD(a, b);
+    }
+    function getLCMMulti(arr) {
+      return arr.reduce((acc, val) => getLCM(acc, val));
+    }
+
+    /* =========================================================
+       3. 中一/中二難度題目生成器 (2-5 個數)
+       ========================================================= */
+    function generateQuestion(mode) {
+      let type = mode;
+      if (mode === 'mixed') {
+        type = Math.random() < 0.5 ? 'hcf' : 'lcm';
+      }
+
+      // 隨機決定數字個數 (2個: 30%, 3個: 40%, 4個: 20%, 5個: 10%)
+      const rand = Math.random();
+      let count = 2;
+      let points = 100;
+      if (rand > 0.90) { count = 5; points = 500; }
+      else if (rand > 0.70) { count = 4; points = 360; }
+      else if (rand > 0.30) { count = 3; points = 200; }
+      else { count = 2; points = 100; }
+
+      let numbers = [];
+      let correctAnswer = 0;
+
+      if (type === 'hcf') {
+        const factorsPool = [12, 14, 15, 16, 18, 20, 21, 24, 25, 28, 30, 36, 42];
+        const baseFactor = factorsPool[Math.floor(Math.random() * factorsPool.length)];
+        const multipliers = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15];
+        const shuffled = multipliers.sort(() => 0.5 - Math.random()).slice(0, count);
+        numbers = shuffled.map(m => m * baseFactor);
+        correctAnswer = getHCFMulti(numbers);
+      } else {
+        if (count === 2) {
+          const s2Pairs = [
+            [14, 35], [18, 24], [20, 28], [24, 36], [28, 42], [32, 48],
+            [35, 42], [45, 60], [36, 54], [40, 56], [48, 72], [54, 72]
+          ];
+          numbers = s2Pairs[Math.floor(Math.random() * s2Pairs.length)];
+        } else if (count === 3) {
+          const s2Triplets = [
+            [8, 12, 18], [12, 15, 20], [14, 21, 28], [15, 24, 36], [18, 24, 30],
+            [20, 28, 35], [16, 24, 32], [24, 36, 48], [12, 18, 27], [18, 27, 36],
+            [20, 30, 45], [15, 30, 45], [16, 20, 24]
+          ];
+          numbers = s2Triplets[Math.floor(Math.random() * s2Triplets.length)];
+        } else if (count === 4) {
+          const s2Quads = [
+            [6, 8, 12, 15], [12, 15, 18, 20], [8, 12, 16, 24], [10, 15, 20, 25],
+            [12, 16, 24, 32], [14, 21, 28, 35], [15, 20, 30, 45], [9, 12, 18, 24],
+            [12, 18, 24, 36]
+          ];
+          numbers = s2Quads[Math.floor(Math.random() * s2Quads.length)];
+        } else {
+          const s2Pentas = [
+            [4, 6, 8, 12, 16], [6, 8, 12, 15, 20], [10, 12, 15, 20, 30],
+            [8, 12, 16, 24, 32], [6, 9, 12, 18, 24], [12, 15, 18, 20, 30],
+            [14, 21, 28, 35, 42]
+          ];
+          numbers = s2Pentas[Math.floor(Math.random() * s2Pentas.length)];
+        }
+        correctAnswer = getLCMMulti(numbers);
+      }
+
+      return {
+        type: type,
+        numbers: numbers,
+        count: count,
+        points: points,
+        halfPoints: Math.floor(points / 2),
+        correctAnswer: correctAnswer
+      };
+    }
+
+    /* =========================================================
+       4. 遊戲核心邏輯 (總時長 5 分鐘 = 300 秒)
+       ========================================================= */
+    const GAME_TOTAL_TIME = 300; // 5 分鐘
+    let lastPlayedTimestamp = null; // 用於排行榜高亮
+
+    let state = {
+      playerName: '',
+      mode: 'mixed',
+      currentQIndex: 0,
+      score: 0,
+      attemptedCount: 0,
+      firstCorrectCount: 0,
+      retryCorrectCount: 0,
+      currentQuestion: null,
+      hasRetryOpportunity: true,
+      isRetry: false,
+      timer: null,
+      totalSecondsLeft: GAME_TOTAL_TIME
+    };
+
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+    }
+
+    function formatTime(sec) {
+      const m = Math.floor(sec / 60).toString().padStart(2, '0');
+      const s = (sec % 60).toString().padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    // 格式化學生輸入（無格式限制，自動大寫與去除首尾空格）
+    function formatStudentInput(str) {
+      return str.trim().toUpperCase();
+    }
+
+    function startGame() {
+      const rawInput = document.getElementById('studentName').value;
+      const formattedName = formatStudentInput(rawInput);
+      
+      if (!formattedName) {
+        alert('請先輸入學生姓名、班別或學號代號！');
+        return;
+      }
+
+      state.playerName = formattedName;
+      state.mode = document.getElementById('gameMode').value;
+      state.currentQIndex = 0;
+      state.score = 0;
+      state.attemptedCount = 0;
+      state.firstCorrectCount = 0;
+      state.retryCorrectCount = 0;
+      state.totalSecondsLeft = GAME_TOTAL_TIME;
+
+      showScreen('gameScreen');
+      startGlobalTimer();
+      loadNextQuestion();
+    }
+
+    function startGlobalTimer() {
+      clearInterval(state.timer);
+      const timerBar = document.getElementById('timerBar');
+      const timerText = document.getElementById('timerText');
+
+      function updateClock() {
+        const percent = (state.totalSecondsLeft / GAME_TOTAL_TIME) * 100;
+        timerBar.style.width = percent + '%';
+        timerText.innerText = formatTime(state.totalSecondsLeft);
+
+        if (state.totalSecondsLeft <= 30) {
+          timerBar.style.backgroundColor = 'var(--danger)';
+          timerText.style.color = 'var(--danger)';
+        } else if (state.totalSecondsLeft <= 90) {
+          timerBar.style.backgroundColor = 'var(--warning)';
+          timerText.style.color = 'var(--warning)';
+        } else {
+          timerBar.style.backgroundColor = 'var(--success)';
+          timerText.style.color = '#fff';
+        }
+      }
+
+      updateClock();
+      state.timer = setInterval(() => {
+        state.totalSecondsLeft--;
+        updateClock();
+
+        if (state.totalSecondsLeft <= 0) {
+          clearInterval(state.timer);
+          endGame();
+        }
+      }, 1000);
+    }
+
+    function loadNextQuestion() {
+      if (state.totalSecondsLeft <= 0) {
+        endGame();
+        return;
+      }
+
+      state.currentQIndex++;
+      state.currentQuestion = generateQuestion(state.mode);
+      state.hasRetryOpportunity = true;
+      state.isRetry = false;
+
+      document.getElementById('currentQuestionNo').innerText = state.currentQIndex;
+      document.getElementById('currentScore').innerText = state.score;
+      document.getElementById('answerInput').value = '';
+      document.getElementById('answerInput').disabled = false;
+      document.getElementById('submitBtn').disabled = false;
+      document.getElementById('submitBtn').innerText = '確認提交';
+
+      const fb = document.getElementById('feedbackBanner');
+      fb.className = 'feedback';
+      fb.style.display = 'none';
+
+      const isHCF = state.currentQuestion.type === 'hcf';
+      const badge = document.getElementById('typeBadge');
+      badge.className = 'type-badge ' + (isHCF ? 'type-hcf' : 'type-lcm');
+      badge.innerText = isHCF ? '最大公因數 (HCF)' : '最小公倍數 (LCM)';
+
+      document.getElementById('numbersDisplay').innerText = state.currentQuestion.numbers.join(' , ');
+      document.getElementById('pointReward').innerText = `★ 滿分：${state.currentQuestion.points} 分 (${state.currentQuestion.count} 個數) ｜ 改正：${state.currentQuestion.halfPoints} 分`;
+
+      setTimeout(() => document.getElementById('answerInput').focus(), 80);
+    }
+
+    function handleAnswerSubmit(e) {
+      e.preventDefault();
+      const inputEl = document.getElementById('answerInput');
+      const userAnswer = parseInt(inputEl.value.trim(), 10);
+      if (isNaN(userAnswer)) return;
+
+      const fb = document.getElementById('feedbackBanner');
+      const q = state.currentQuestion;
+
+      if (userAnswer === q.correctAnswer) {
+        state.attemptedCount++;
+        
+        if (!state.isRetry) {
+          state.score += q.points;
+          state.firstCorrectCount++;
+          Sound.correct();
+          fb.className = 'feedback success';
+          fb.innerText = `🎉 厲害！首次回答完全正確！(+${q.points} 分)`;
+        } else {
+          state.score += q.halfPoints;
+          state.retryCorrectCount++;
+          Sound.halfCorrect();
+          fb.className = 'feedback success';
+          fb.innerText = `✅ 改正成功！獲得一半分數 (+${q.halfPoints} 分)`;
+        }
+
+        fb.style.display = 'block';
+        document.getElementById('currentScore').innerText = state.score;
+        document.getElementById('answerInput').disabled = true;
+        document.getElementById('submitBtn').disabled = true;
+
+        setTimeout(loadNextQuestion, 1400);
+      } else {
+        Sound.wrong();
+
+        if (state.hasRetryOpportunity) {
+          state.hasRetryOpportunity = false;
+          state.isRetry = true;
+
+          fb.className = 'feedback warning';
+          fb.innerText = `❌ 答案不正確！你有 1 次改正機會（改正答對可獲一半分數：+${q.halfPoints} 分）`;
+          fb.style.display = 'block';
+
+          inputEl.value = '';
+          inputEl.focus();
+          document.getElementById('submitBtn').innerText = '提交改正答案 (50% 分數)';
+        } else {
+          state.attemptedCount++;
+          fb.className = 'feedback danger';
+          fb.innerText = `❌ 改正仍不正確！本題正確答案是：${q.correctAnswer}`;
+          fb.style.display = 'block';
+
+          document.getElementById('answerInput').disabled = true;
+          document.getElementById('submitBtn').disabled = true;
+
+          setTimeout(loadNextQuestion, 2200);
+        }
+      }
+    }
+
+    // 遊戲時間結束：自動結算並直接跳轉分數榜單
+    function endGame() {
+      clearInterval(state.timer);
+      Sound.victory();
+
+      const totalCorrect = state.firstCorrectCount + state.retryCorrectCount;
+      const accuracy = state.attemptedCount > 0 ? Math.round((totalCorrect / state.attemptedCount) * 100) : 0;
+      
+      const newTimestamp = Date.now();
+      lastPlayedTimestamp = newTimestamp;
+
+      saveScore(state.playerName, state.score, state.attemptedCount, totalCorrect, newTimestamp);
+
+      // 自動渲染並顯示排行榜
+      showLeaderboard(true);
+    }
+
+    function goToStart() {
+      showScreen('startScreen');
+    }
+
+    /* =========================================================
+       5. 本機排行榜與老師彙總工具 (LocalStorage)
+       ========================================================= */
+    const STORAGE_KEY = 'hcf_lcm_s1s2_leaderboard_v2';
+
+    function getScores() {
+      const data = localStorage.getItem(STORAGE_KEY);
+      return data ? JSON.parse(data) : [];
+    }
+
+    function saveScore(name, score, attempted, correct, timestamp) {
+      let scores = getScores();
+      const record = {
+        name: name,
+        score: score,
+        attempted: attempted,
+        correct: correct,
+        date: new Date().toLocaleDateString('zh-HK', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        rawTime: timestamp || Date.now()
+      };
+      scores.push(record);
+      scores.sort((a, b) => b.score - a.score || b.correct - a.correct);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(scores));
+    }
+
+    function showLeaderboard(isJustFinished = false) {
+      showScreen('leaderboardScreen');
+      const scores = getScores();
+      const tbody = document.getElementById('leaderboardBody');
+      const summaryCard = document.getElementById('mySummaryCard');
+      tbody.innerHTML = '';
+
+      if (isJustFinished) {
+        summaryCard.style.display = 'block';
+        document.getElementById('summaryScore').innerText = `${state.score} 分`;
+        document.getElementById('summaryFirst').innerText = state.firstCorrectCount;
+        document.getElementById('summaryRetry').innerText = state.retryCorrectCount;
+
+        const myRankIndex = scores.findIndex(s => s.rawTime === lastPlayedTimestamp);
+        document.getElementById('summaryRank').innerText = myRankIndex !== -1 ? `#${myRankIndex + 1}` : '#--';
+      } else {
+        summaryCard.style.display = 'none';
+      }
+
+      if (scores.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: var(--text-dim); padding: 16px;">目前尚無挑戰紀錄，快來搶佔榜首！</td></tr>';
+        return;
+      }
+
+      scores.slice(0, 30).forEach((item, index) => {
+        const tr = document.createElement('tr');
+        let rankClass = '';
+        if (index === 0) rankClass = 'rank-1';
+        else if (index === 1) rankClass = 'rank-2';
+        else if (index === 2) rankClass = 'rank-3';
+
+        const isCurrentUser = (item.rawTime === lastPlayedTimestamp);
+        if (isCurrentUser) {
+          tr.className = 'highlight-row';
+        }
+
+        tr.innerHTML = `
+          <td class="${rankClass}">#${index + 1}</td>
+          <td style="font-weight:600;">
+            ${escapeHTML(item.name)} ${isCurrentUser ? '<span style="font-size:0.75rem; color:var(--secondary);">(本次 🌟)</span>' : ''}
+          </td>
+          <td style="color:var(--warning); font-weight:bold;">${item.score}</td>
+          <td style="color:var(--secondary);">${item.correct || 0} / ${item.attempted || 0}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function escapeHTML(str) {
+      return str.replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+      );
+    }
+
+    function clearLeaderboard() {
+      if (confirm('確定要清空排行榜數據嗎？此操作無法還原。')) {
+        localStorage.removeItem(STORAGE_KEY);
+        lastPlayedTimestamp = null;
+        showLeaderboard(false);
+      }
+    }
+
+    function copyMyResultCode() {
+      const scores = getScores();
+      if (scores.length === 0) {
+        alert('尚無任何遊玩記錄！');
+        return;
+      }
+      const latest = scores.find(s => s.rawTime === lastPlayedTimestamp) || scores[scores.length - 1];
+      const code = btoa(encodeURIComponent(JSON.stringify(latest)));
+      navigator.clipboard.writeText(code).then(() => {
+        alert(`已複製【${latest.name}】的成績代碼！\n總分：${latest.score}分\n答對題數：${latest.correct}/${latest.attempted}\n請將代碼發送給老師。`);
+      });
+    }
+
+    function importResults() {
+      const input = document.getElementById('importInput').value.trim();
+      if (!input) return;
+
+      const lines = input.split('\n');
+      let successCount = 0;
+      let scores = getScores();
+
+      lines.forEach(line => {
+        try {
+          const decoded = JSON.parse(decodeURIComponent(atob(line.trim())));
+          if (decoded.name && typeof decoded.score === 'number') {
+            scores.push(decoded);
+            successCount++;
+          }
+        } catch (err) {}
+      });
+
+      if (successCount > 0) {
+        scores.sort((a, b) => b.score - a.score || (b.correct || 0) - (a.correct || 0));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(scores));
+        alert(`成功匯入 ${successCount} 條學生記錄！`);
+        document.getElementById('importInput').value = '';
+        showLeaderboard(false);
+      } else {
+        alert('未能識別有效的成績代碼，請確認格式。');
+      }
+    }
+
+    function exportCSV() {
+      const scores = getScores();
+      if (scores.length === 0) {
+        alert('無數據可匯出！');
+        return;
+      }
+      let csvContent = "data:text/csv;charset=utf-8,\uFEFF名次,姓名/代號,總分,答對題數,總完成題數,時間\n";
+      scores.forEach((s, idx) => {
+        csvContent += `${idx + 1},"${s.name}",${s.score},${s.correct || 0},${s.attempted || 0},${s.date}\n`;
+      });
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `HCF_LCM_5分鐘挑戰成績_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+</body>
+</html>
